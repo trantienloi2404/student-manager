@@ -60,3 +60,34 @@ Chương trình sẽ tự động kiểm tra tính hợp lệ của các trườ
 - **Giới tính**: Chỉ chấp nhận các giá trị `Nam`, `Nữ`, hoặc `Khác`.
 - **Khoa**: Chỉ chấp nhận các khoa được định nghĩa sẵn.
 - **Tình trạng sinh viên**: Chỉ chấp nhận các tình trạng được định nghĩa sẵn.
+
+## Ảnh Chụp Màn Hình Của Chương Trình
+
+### Giao Diện Chính
+
+![image](https://github.com/user-attachments/assets/e84b5748-31ce-4a11-83bf-0a27cd3e4150)
+
+### Thêm Sinh Viên
+
+![image-1](https://github.com/user-attachments/assets/70c39aa4-1d31-459b-82f3-ce43ff7503ab)
+
+### Xem Tất Cả Sinh Viên
+
+![image-2](https://github.com/user-attachments/assets/2cf7bcf1-8c62-4485-b9ea-c0e2b07d415a)
+
+### Cập Nhật Sinh Viên
+
+![image-3](https://github.com/user-attachments/assets/1c52bb7e-a2bb-4720-9826-e713664cdefa)
+
+### Tìm Kiếm Sinh Viên
+
+![image-4](https://github.com/user-attachments/assets/b041a043-e2db-48b0-ae24-5bc98991eae4)
+
+### Xóa Sinh Viên
+
+![image-5](https://github.com/user-attachments/assets/1b2b5b2d-b76f-4fac-8b1f-74cdfda97df2)
+
+### Thoát Chương Trình
+
+![image-6](https://github.com/user-attachments/assets/3548c2b8-6ab5-4041-b4f2-8ca690bc7614)
+
