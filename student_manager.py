@@ -1,6 +1,7 @@
 import csv
 import os
-import json  # Import json module for JSON operations
+import json  # For JSON operations
+import logging  # For logging mechanism
 from student import (
     Student,
     FACULTIES,
@@ -21,6 +22,7 @@ class StudentManager:
     def __init__(self):
         self.students = []
         self.load_from_csv()  # Auto-load CSV data if available
+        logging.info("StudentManager initialized and data loaded from CSV (if exists).")
 
     def add_student(self):
         print("Add a new student:")
@@ -93,6 +95,7 @@ class StudentManager:
         )
         self.students.append(student)
         print("Student added successfully!")
+        logging.info("Added new student: MSSV=%s, Name=%s", mssv, name)
         self.save_to_csv()  # Auto-save after adding a student
 
     def delete_student(self):
@@ -101,9 +104,11 @@ class StudentManager:
             if student.mssv == mssv:
                 self.students.remove(student)
                 print("Student deleted successfully!")
+                logging.info("Deleted student with MSSV=%s", mssv)
                 self.save_to_csv()  # Auto-save after deleting a student
                 return
         print("Student not found.")
+        logging.warning("Attempted to delete non-existent student with MSSV=%s", mssv)
 
     def update_student(self):
         mssv = input("Enter MSSV to update: ")
@@ -175,11 +180,12 @@ class StudentManager:
                     status = input(f"Status ({student.status}): ") or student.status
                 student.status = status
                 print("Student updated successfully!")
+                logging.info("Updated student: MSSV=%s", mssv)
                 self.save_to_csv()  # Auto-save after updating a student
                 return
         print("Student not found.")
+        logging.warning("Attempted to update non-existent student with MSSV=%s", mssv)
 
-    # Updated search function with sub-menu
     def search_student(self):
         print("\nSearch Student")
         print("1. Search by MSSV or Name")
@@ -191,7 +197,6 @@ class StudentManager:
         elif choice == "3":
             self.search_by_faculty_and_name()
         else:
-            # Default search by MSSV or name
             search_term = input("Enter MSSV or Name to search: ")
             results = []
             for student in self.students:
@@ -206,8 +211,8 @@ class StudentManager:
                     print(student)
             else:
                 print("No students found.")
+            logging.info("Searched by MSSV/Name with term: %s", search_term)
 
-    # New: Search by Faculty
     def search_by_faculty(self):
         faculty_input = input("Enter Faculty to search: ")
         results = [
@@ -221,8 +226,8 @@ class StudentManager:
                 print(student)
         else:
             print("No students found for faculty:", faculty_input)
+        logging.info("Searched by Faculty with term: %s", faculty_input)
 
-    # New: Search by Faculty and Student Name
     def search_by_faculty_and_name(self):
         faculty_input = input("Enter Faculty to search: ")
         name_input = input("Enter Student Name (or part of it) to search: ")
@@ -238,6 +243,7 @@ class StudentManager:
                 print(student)
         else:
             print("No students found for the given faculty and name combination.")
+        logging.info("Searched by Faculty: %s and Name: %s", faculty_input, name_input)
 
     def list_students(self):
         if not self.students:
@@ -246,9 +252,9 @@ class StudentManager:
             print("List of students:")
             for student in self.students:
                 print(student)
+        logging.info("Listed all students. Count: %d", len(self.students))
 
     def save_to_csv(self, filename="students.csv"):
-        # Save student data to a CSV file
         with open(filename, "w", newline="", encoding="utf-8") as csvfile:
             fieldnames = [
                 "mssv",
@@ -282,9 +288,11 @@ class StudentManager:
                     }
                 )
         print("Exported students to CSV.")
+        logging.info(
+            "Exported %d students to CSV file: %s", len(self.students), filename
+        )
 
     def load_from_csv(self, filename="students.csv"):
-        # Clear current list and load student data from CSV file if it exists
         self.students.clear()
         if os.path.exists(filename):
             with open(filename, newline="", encoding="utf-8") as csvfile:
@@ -305,11 +313,14 @@ class StudentManager:
                     )
                     self.students.append(student)
             print("Imported students from CSV.")
+            logging.info(
+                "Imported %d students from CSV file: %s", len(self.students), filename
+            )
         else:
             print("CSV file not found.")
+            logging.warning("CSV file not found for import: %s", filename)
 
     def export_to_json(self, filename="students.json"):
-        # Export student data to a JSON file
         data = []
         for student in self.students:
             data.append(
@@ -330,9 +341,11 @@ class StudentManager:
         with open(filename, "w", encoding="utf-8") as jsonfile:
             json.dump(data, jsonfile, ensure_ascii=False, indent=4)
         print("Exported students to JSON.")
+        logging.info(
+            "Exported %d students to JSON file: %s", len(self.students), filename
+        )
 
     def import_from_json(self, filename="students.json"):
-        # Import student data from a JSON file if it exists
         if os.path.exists(filename):
             with open(filename, encoding="utf-8") as jsonfile:
                 data = json.load(jsonfile)
@@ -353,8 +366,12 @@ class StudentManager:
                 )
                 self.students.append(student)
             print("Imported students from JSON.")
+            logging.info(
+                "Imported %d students from JSON file: %s", len(self.students), filename
+            )
         else:
             print("JSON file does not exist.")
+            logging.warning("JSON file not found for import: %s", filename)
 
     # The management functions for Faculties, Statuses, and Programs remain unchanged.
     def manage_faculties(self):
@@ -372,6 +389,7 @@ class StudentManager:
                 else:
                     FACULTIES.append(new_faculty)
                     print("New Faculty added.")
+                    logging.info("Added new Faculty: %s", new_faculty)
             elif choice == "2":
                 print("Existing Faculties: ", FACULTIES)
                 old_name = input("Enter the Faculty name to rename: ")
@@ -385,6 +403,7 @@ class StudentManager:
                         if student.faculty == old_name:
                             student.faculty = new_name
                     print("Faculty renamed successfully.")
+                    logging.info("Renamed Faculty from %s to %s", old_name, new_name)
             elif choice == "3":
                 print("List of Faculties: ", FACULTIES)
             elif choice == "4":
@@ -407,6 +426,7 @@ class StudentManager:
                 else:
                     STATUSES.append(new_status)
                     print("New Status added.")
+                    logging.info("Added new Status: %s", new_status)
             elif choice == "2":
                 print("Existing Statuses: ", STATUSES)
                 old_status = input("Enter the Status to rename: ")
@@ -420,6 +440,7 @@ class StudentManager:
                         if student.status == old_status:
                             student.status = new_status
                     print("Status renamed successfully.")
+                    logging.info("Renamed Status from %s to %s", old_status, new_status)
             elif choice == "3":
                 print("List of Statuses: ", STATUSES)
             elif choice == "4":
@@ -442,6 +463,7 @@ class StudentManager:
                 else:
                     PROGRAMS.append(new_program)
                     print("New Program added.")
+                    logging.info("Added new Program: %s", new_program)
             elif choice == "2":
                 print("Existing Programs: ", PROGRAMS)
                 old_program = input("Enter the Program to rename: ")
@@ -455,6 +477,9 @@ class StudentManager:
                         if student.program == old_program:
                             student.program = new_program
                     print("Program renamed successfully.")
+                    logging.info(
+                        "Renamed Program from %s to %s", old_program, new_program
+                    )
             elif choice == "3":
                 print("List of Programs: ", PROGRAMS)
             elif choice == "4":

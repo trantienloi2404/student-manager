@@ -1,7 +1,16 @@
+import logging
 from student_manager import StudentManager
 
+# Configure logging (logs are appended to app.log)
+logging.basicConfig(
+    level=logging.INFO,
+    filename='app.log',
+    filemode='a',
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 def main():
+    logging.info("Application started.")
     manager = StudentManager()
     while True:
         print("\nStudent Management System")
@@ -31,13 +40,13 @@ def main():
         elif choice == "5":
             manager.list_students()
         elif choice == "6":
-            manager.save_to_csv()
+            manager.save_to_csv()  # Export to CSV
         elif choice == "7":
-            manager.load_from_csv()
+            manager.load_from_csv()  # Import from CSV
         elif choice == "8":
-            manager.export_to_json()
+            manager.export_to_json()  # Export to JSON
         elif choice == "9":
-            manager.import_from_json()
+            manager.import_from_json()  # Import from JSON
         elif choice == "10":
             manager.manage_faculties()
         elif choice == "11":
@@ -45,11 +54,12 @@ def main():
         elif choice == "12":
             manager.manage_programs()
         elif choice == "13":
+            logging.info("Application exited by user.")
             print("Exiting the program.")
             break
         else:
             print("Invalid choice. Please try again.")
-
+    logging.info("Application terminated.")
 
 if __name__ == "__main__":
     main()
