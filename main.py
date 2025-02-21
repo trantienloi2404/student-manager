@@ -1,6 +1,5 @@
 from student_manager import StudentManager
 
-
 def main():
     manager = StudentManager()
     while True:
@@ -10,7 +9,8 @@ def main():
         print("3. Update a student")
         print("4. Search for a student")
         print("5. List all students")
-        print("6. Exit")
+        print("6. Save data to CSV")  # New menu option for saving data
+        print("7. Exit")
         choice = input("Enter your choice: ")
 
         if choice == "1":
@@ -24,11 +24,12 @@ def main():
         elif choice == "5":
             manager.list_students()
         elif choice == "6":
+            manager.save_to_csv()
+        elif choice == "7":
             print("Exiting the program.")
             break
         else:
             print("Invalid choice. Please try again.")
-
 
 if __name__ == "__main__":
     main()

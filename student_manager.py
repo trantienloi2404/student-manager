@@ -1,3 +1,5 @@
+import csv
+import os
 from student import (
     Student,
     FACULTIES,
@@ -15,6 +17,7 @@ from student import (
 class StudentManager:
     def __init__(self):
         self.students = []
+        self.load_from_csv()  # Load existing data from CSV file if available
 
     def add_student(self):
         print("Add a new student:")
@@ -66,6 +69,7 @@ class StudentManager:
         )
         self.students.append(student)
         print("Student added successfully!")
+        self.save_to_csv()  # Auto-save after adding a student
 
     def delete_student(self):
         mssv = input("Enter MSSV to delete: ")
@@ -73,6 +77,7 @@ class StudentManager:
             if student.mssv == mssv:
                 self.students.remove(student)
                 print("Student deleted successfully!")
+                self.save_to_csv()  # Auto-save after deleting a student
                 return
         print("Student not found.")
 
@@ -126,6 +131,7 @@ class StudentManager:
                     status = input(f"Status ({student.status}): ") or student.status
                 student.status = status
                 print("Student updated successfully!")
+                self.save_to_csv()  # Auto-save after updating a student
                 return
         print("Student not found.")
 
@@ -152,3 +158,61 @@ class StudentManager:
             print("List of students:")
             for student in self.students:
                 print(student)
+
+    def save_to_csv(self, filename="students.csv"):
+        # Save student data to a CSV file
+        with open(filename, "w", newline="", encoding="utf-8") as csvfile:
+            fieldnames = [
+                "mssv",
+                "name",
+                "dob",
+                "gender",
+                "faculty",
+                "year",
+                "program",
+                "address",
+                "email",
+                "phone",
+                "status",
+            ]
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for student in self.students:
+                writer.writerow(
+                    {
+                        "mssv": student.mssv,
+                        "name": student.name,
+                        "dob": student.dob,
+                        "gender": student.gender,
+                        "faculty": student.faculty,
+                        "year": student.year,
+                        "program": student.program,
+                        "address": student.address,
+                        "email": student.email,
+                        "phone": student.phone,
+                        "status": student.status,
+                    }
+                )
+        print("Saved students to CSV.")
+
+    def load_from_csv(self, filename="students.csv"):
+        # Load student data from a CSV file if it exists
+        if os.path.exists(filename):
+            with open(filename, newline="", encoding="utf-8") as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    student = Student(
+                        row["mssv"],
+                        row["name"],
+                        row["dob"],
+                        row["gender"],
+                        row["faculty"],
+                        row["year"],
+                        row["program"],
+                        row["address"],
+                        row["email"],
+                        row["phone"],
+                        row["status"],
+                    )
+                    self.students.append(student)
+            print("Loaded students from CSV.")
