@@ -10,6 +10,7 @@ FACULTIES = [
 ]
 STATUSES = ["Đang học", "Đã tốt nghiệp", "Đã thôi học", "Tạm dừng học"]
 GENDERS = ["Nam", "Nữ", "Khác"]
+PROGRAMS = ["Chương trình chuẩn", "Chương trình đặc biệt"]
 
 
 # Student class
@@ -85,3 +86,7 @@ def validate_year(year):
 
 def validate_gender(gender):
     return gender in GENDERS
+
+
+def validate_program(program):
+    return program in PROGRAMS

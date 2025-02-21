@@ -4,6 +4,7 @@ from student import (
     Student,
     FACULTIES,
     STATUSES,
+    PROGRAMS,
     validate_email,
     validate_phone,
     validate_faculty,
@@ -11,6 +12,7 @@ from student import (
     validate_dob,
     validate_year,
     validate_gender,
+    validate_program,
 )
 
 
@@ -39,7 +41,28 @@ class StudentManager:
         while not validate_year(year):
             print("Invalid year. Please enter a valid year (1900-current year).")
             year = input("Year: ")
-        program = input("Program: ")
+
+        # New: Select program from list or add new one
+        print("Available Programs: ", PROGRAMS)
+        program = input(
+            "Select a program from the list or type 'new' to add a new program: "
+        )
+        if program.lower() == "new":
+            new_program = input("Enter new program name: ")
+            PROGRAMS.append(new_program)
+            program = new_program
+        else:
+            while program not in PROGRAMS:
+                print("Invalid program. Available options: ", PROGRAMS)
+                program = input(
+                    "Select a program from the list or type 'new' to add a new program: "
+                )
+                if program.lower() == "new":
+                    new_program = input("Enter new program name: ")
+                    PROGRAMS.append(new_program)
+                    program = new_program
+                    break
+
         address = input("Address: ")
         email = input("Email: ")
         while not validate_email(email):
@@ -109,9 +132,29 @@ class StudentManager:
                     )
                     year = input(f"Year ({student.year}): ") or student.year
                 student.year = year
-                student.program = (
+
+                # New: Update program with selection from list or adding new
+                print("Available Programs: ", PROGRAMS)
+                program_input = (
                     input(f"Program ({student.program}): ") or student.program
                 )
+                if program_input.lower() == "new":
+                    new_program = input("Enter new program name: ")
+                    PROGRAMS.append(new_program)
+                    program_input = new_program
+                else:
+                    while program_input not in PROGRAMS:
+                        print("Invalid program. Available options: ", PROGRAMS)
+                        program_input = (
+                            input(f"Program ({student.program}): ") or student.program
+                        )
+                        if program_input.lower() == "new":
+                            new_program = input("Enter new program name: ")
+                            PROGRAMS.append(new_program)
+                            program_input = new_program
+                            break
+                student.program = program_input
+
                 student.address = (
                     input(f"Address ({student.address}): ") or student.address
                 )
@@ -216,3 +259,114 @@ class StudentManager:
                     )
                     self.students.append(student)
             print("Loaded students from CSV.")
+
+    # New: Function to manage Faculties
+    def manage_faculties(self):
+        while True:
+            print("\nManage Faculties")
+            print("1. Add new Faculty")
+            print("2. Rename existing Faculty")
+            print("3. List Faculties")
+            print("4. Back to main menu")
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                new_faculty = input("Enter new Faculty name: ")
+                if new_faculty in FACULTIES:
+                    print("Faculty already exists.")
+                else:
+                    FACULTIES.append(new_faculty)
+                    print("New Faculty added.")
+            elif choice == "2":
+                print("Existing Faculties: ", FACULTIES)
+                old_name = input("Enter the Faculty name to rename: ")
+                if old_name not in FACULTIES:
+                    print("Faculty not found.")
+                else:
+                    new_name = input("Enter new Faculty name: ")
+                    index = FACULTIES.index(old_name)
+                    FACULTIES[index] = new_name
+                    # Update all students with the old faculty
+                    for student in self.students:
+                        if student.faculty == old_name:
+                            student.faculty = new_name
+                    print("Faculty renamed successfully.")
+            elif choice == "3":
+                print("List of Faculties: ", FACULTIES)
+            elif choice == "4":
+                break
+            else:
+                print("Invalid choice. Try again.")
+
+    # New: Function to manage Student Statuses
+    def manage_statuses(self):
+        while True:
+            print("\nManage Student Statuses")
+            print("1. Add new Status")
+            print("2. Rename existing Status")
+            print("3. List Statuses")
+            print("4. Back to main menu")
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                new_status = input("Enter new Status: ")
+                if new_status in STATUSES:
+                    print("Status already exists.")
+                else:
+                    STATUSES.append(new_status)
+                    print("New Status added.")
+            elif choice == "2":
+                print("Existing Statuses: ", STATUSES)
+                old_status = input("Enter the Status to rename: ")
+                if old_status not in STATUSES:
+                    print("Status not found.")
+                else:
+                    new_status = input("Enter new Status name: ")
+                    index = STATUSES.index(old_status)
+                    STATUSES[index] = new_status
+                    # Update all students with the old status
+                    for student in self.students:
+                        if student.status == old_status:
+                            student.status = new_status
+                    print("Status renamed successfully.")
+            elif choice == "3":
+                print("List of Statuses: ", STATUSES)
+            elif choice == "4":
+                break
+            else:
+                print("Invalid choice. Try again.")
+
+    # New: Function to manage Programs
+    def manage_programs(self):
+        while True:
+            print("\nManage Programs")
+            print("1. Add new Program")
+            print("2. Rename existing Program")
+            print("3. List Programs")
+            print("4. Back to main menu")
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                new_program = input("Enter new Program name: ")
+                if new_program in PROGRAMS:
+                    print("Program already exists.")
+                else:
+                    PROGRAMS.append(new_program)
+                    print("New Program added.")
+            elif choice == "2":
+                print("Existing Programs: ", PROGRAMS)
+                old_program = input("Enter the Program to rename: ")
+                if old_program not in PROGRAMS:
+                    print("Program not found.")
+                else:
+                    new_program = input("Enter new Program name: ")
+                    index = PROGRAMS.index(old_program)
+                    PROGRAMS[index] = new_program
+                    # Update all students with the old program
+                    for student in self.students:
+                        if student.program == old_program:
+                            student.program = new_program
+                    print("Program renamed successfully.")
+            elif choice == "3":
+                print("List of Programs: ", PROGRAMS)
+            elif choice == "4":
+                break
+            else:
+                print("Invalid choice. Try again.")
