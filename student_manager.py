@@ -178,21 +178,65 @@ class StudentManager:
                 return
         print("Student not found.")
 
+    # Updated search function with sub-menu
     def search_student(self):
-        search_term = input("Enter MSSV or name to search: ")
-        results = []
-        for student in self.students:
-            if (
-                search_term.lower() in student.mssv.lower()
-                or search_term.lower() in student.name.lower()
-            ):
-                results.append(student)
+        print("\nSearch Student")
+        print("1. Search by MSSV or Name")
+        print("2. Search by Faculty")
+        print("3. Search by Faculty and Student Name")
+        choice = input("Enter your choice: ")
+        if choice == "2":
+            self.search_by_faculty()
+        elif choice == "3":
+            self.search_by_faculty_and_name()
+        else:
+            # Default search by MSSV or name
+            search_term = input("Enter MSSV or Name to search: ")
+            results = []
+            for student in self.students:
+                if (
+                    search_term.lower() in student.mssv.lower()
+                    or search_term.lower() in student.name.lower()
+                ):
+                    results.append(student)
+            if results:
+                print("Search results:")
+                for student in results:
+                    print(student)
+            else:
+                print("No students found.")
+
+    # New: Search by Faculty
+    def search_by_faculty(self):
+        faculty_input = input("Enter Faculty to search: ")
+        results = [
+            student
+            for student in self.students
+            if faculty_input.lower() in student.faculty.lower()
+        ]
         if results:
-            print("Search results:")
+            print("Search results (by Faculty):")
             for student in results:
                 print(student)
         else:
-            print("No students found.")
+            print("No students found for faculty:", faculty_input)
+
+    # New: Search by Faculty and Student Name
+    def search_by_faculty_and_name(self):
+        faculty_input = input("Enter Faculty to search: ")
+        name_input = input("Enter Student Name (or part of it) to search: ")
+        results = [
+            student
+            for student in self.students
+            if faculty_input.lower() in student.faculty.lower()
+            and name_input.lower() in student.name.lower()
+        ]
+        if results:
+            print("Search results (by Faculty and Name):")
+            for student in results:
+                print(student)
+        else:
+            print("No students found for the given faculty and name combination.")
 
     def list_students(self):
         if not self.students:
