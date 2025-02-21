@@ -1,5 +1,6 @@
 import csv
 import os
+import json  # Import json module for JSON operations
 from student import (
     Student,
     FACULTIES,
@@ -19,7 +20,7 @@ from student import (
 class StudentManager:
     def __init__(self):
         self.students = []
-        self.load_from_csv()  # Load existing data from CSV file if available
+        self.load_from_csv()  # Auto-load CSV data if available
 
     def add_student(self):
         print("Add a new student:")
@@ -42,7 +43,7 @@ class StudentManager:
             print("Invalid year. Please enter a valid year (1900-current year).")
             year = input("Year: ")
 
-        # New: Select program from list or add new one
+        # Select program from list or add new one
         print("Available Programs: ", PROGRAMS)
         program = input(
             "Select a program from the list or type 'new' to add a new program: "
@@ -133,7 +134,7 @@ class StudentManager:
                     year = input(f"Year ({student.year}): ") or student.year
                 student.year = year
 
-                # New: Update program with selection from list or adding new
+                # Update program with selection from list or adding new
                 print("Available Programs: ", PROGRAMS)
                 program_input = (
                     input(f"Program ({student.program}): ") or student.program
@@ -280,10 +281,11 @@ class StudentManager:
                         "status": student.status,
                     }
                 )
-        print("Saved students to CSV.")
+        print("Exported students to CSV.")
 
     def load_from_csv(self, filename="students.csv"):
-        # Load student data from a CSV file if it exists
+        # Clear current list and load student data from CSV file if it exists
+        self.students.clear()
         if os.path.exists(filename):
             with open(filename, newline="", encoding="utf-8") as csvfile:
                 reader = csv.DictReader(csvfile)
@@ -302,9 +304,59 @@ class StudentManager:
                         row["status"],
                     )
                     self.students.append(student)
-            print("Loaded students from CSV.")
+            print("Imported students from CSV.")
+        else:
+            print("CSV file not found.")
 
-    # New: Function to manage Faculties
+    def export_to_json(self, filename="students.json"):
+        # Export student data to a JSON file
+        data = []
+        for student in self.students:
+            data.append(
+                {
+                    "mssv": student.mssv,
+                    "name": student.name,
+                    "dob": student.dob,
+                    "gender": student.gender,
+                    "faculty": student.faculty,
+                    "year": student.year,
+                    "program": student.program,
+                    "address": student.address,
+                    "email": student.email,
+                    "phone": student.phone,
+                    "status": student.status,
+                }
+            )
+        with open(filename, "w", encoding="utf-8") as jsonfile:
+            json.dump(data, jsonfile, ensure_ascii=False, indent=4)
+        print("Exported students to JSON.")
+
+    def import_from_json(self, filename="students.json"):
+        # Import student data from a JSON file if it exists
+        if os.path.exists(filename):
+            with open(filename, encoding="utf-8") as jsonfile:
+                data = json.load(jsonfile)
+            self.students.clear()
+            for row in data:
+                student = Student(
+                    row["mssv"],
+                    row["name"],
+                    row["dob"],
+                    row["gender"],
+                    row["faculty"],
+                    row["year"],
+                    row["program"],
+                    row["address"],
+                    row["email"],
+                    row["phone"],
+                    row["status"],
+                )
+                self.students.append(student)
+            print("Imported students from JSON.")
+        else:
+            print("JSON file does not exist.")
+
+    # The management functions for Faculties, Statuses, and Programs remain unchanged.
     def manage_faculties(self):
         while True:
             print("\nManage Faculties")
@@ -329,7 +381,6 @@ class StudentManager:
                     new_name = input("Enter new Faculty name: ")
                     index = FACULTIES.index(old_name)
                     FACULTIES[index] = new_name
-                    # Update all students with the old faculty
                     for student in self.students:
                         if student.faculty == old_name:
                             student.faculty = new_name
@@ -341,7 +392,6 @@ class StudentManager:
             else:
                 print("Invalid choice. Try again.")
 
-    # New: Function to manage Student Statuses
     def manage_statuses(self):
         while True:
             print("\nManage Student Statuses")
@@ -366,7 +416,6 @@ class StudentManager:
                     new_status = input("Enter new Status name: ")
                     index = STATUSES.index(old_status)
                     STATUSES[index] = new_status
-                    # Update all students with the old status
                     for student in self.students:
                         if student.status == old_status:
                             student.status = new_status
@@ -378,7 +427,6 @@ class StudentManager:
             else:
                 print("Invalid choice. Try again.")
 
-    # New: Function to manage Programs
     def manage_programs(self):
         while True:
             print("\nManage Programs")
@@ -403,7 +451,6 @@ class StudentManager:
                     new_program = input("Enter new Program name: ")
                     index = PROGRAMS.index(old_program)
                     PROGRAMS[index] = new_program
-                    # Update all students with the old program
                     for student in self.students:
                         if student.program == old_program:
                             student.program = new_program

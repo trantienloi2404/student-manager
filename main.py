@@ -10,11 +10,14 @@ def main():
         print("3. Update a student")
         print("4. Search for a student")
         print("5. List all students")
-        print("6. Save data to CSV")
-        print("7. Manage Faculties")
-        print("8. Manage Student Statuses")
-        print("9. Manage Programs")
-        print("10. Exit")
+        print("6. Export data to CSV")
+        print("7. Import data from CSV")
+        print("8. Export data to JSON")
+        print("9. Import data from JSON")
+        print("10. Manage Faculties")
+        print("11. Manage Student Statuses")
+        print("12. Manage Programs")
+        print("13. Exit")
         choice = input("Enter your choice: ")
 
         if choice == "1":
@@ -30,12 +33,18 @@ def main():
         elif choice == "6":
             manager.save_to_csv()
         elif choice == "7":
-            manager.manage_faculties()
+            manager.load_from_csv()
         elif choice == "8":
-            manager.manage_statuses()
+            manager.export_to_json()
         elif choice == "9":
-            manager.manage_programs()
+            manager.import_from_json()
         elif choice == "10":
+            manager.manage_faculties()
+        elif choice == "11":
+            manager.manage_statuses()
+        elif choice == "12":
+            manager.manage_programs()
+        elif choice == "13":
             print("Exiting the program.")
             break
         else:
