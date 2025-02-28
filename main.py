@@ -3,17 +3,26 @@ import datetime
 import logging
 from student_manager import StudentManager
 
-APP_VERSION = "1.0.0"
+# Application version and dynamic build date
+APP_VERSION = "2.0.0"
 BUILD_DATE = datetime.datetime.fromtimestamp(os.path.getmtime(__file__)).strftime(
     "%Y-%m-%d"
 )
 
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     filename="app.log",
     filemode="a",
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
+
+
+def print_header():
+    # Display the school logo or name at the top of each screen
+    print("=================================")
+    print("TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN")
+    print("=================================\n")
 
 
 def show_version():
@@ -27,7 +36,8 @@ def main():
     logging.info("Application started.")
     manager = StudentManager()
     while True:
-        print("\nStudent Management System")
+        print_header()
+        print("\nStudent Management System - Version 2.0")
         print("1. Add a new student")
         print("2. Delete a student")
         print("3. Update a student")
@@ -40,8 +50,14 @@ def main():
         print("10. Manage Faculties")
         print("11. Manage Student Statuses")
         print("12. Manage Programs")
-        print("13. Show Version and Build Date")
-        print("14. Exit")
+        print("13. Export Confirmation Letter")
+        print(
+            "14. Toggle Deletion Restriction (currently: {})".format(
+                "ON" if manager.deletion_restriction_enabled else "OFF"
+            )
+        )
+        print("15. Show Version and Build Date")
+        print("16. Exit")
         choice = input("Enter your choice: ")
 
         if choice == "1":
@@ -69,8 +85,23 @@ def main():
         elif choice == "12":
             manager.manage_programs()
         elif choice == "13":
-            show_version()
+            manager.export_confirmation_letter()
         elif choice == "14":
+            # Toggle deletion restriction
+            manager.deletion_restriction_enabled = (
+                not manager.deletion_restriction_enabled
+            )
+            print(
+                "Deletion restriction is now",
+                "ON" if manager.deletion_restriction_enabled else "OFF",
+            )
+            logging.info(
+                "Toggled deletion restriction to %s",
+                manager.deletion_restriction_enabled,
+            )
+        elif choice == "15":
+            show_version()
+        elif choice == "16":
             logging.info("Application exited by user.")
             print("Exiting the program.")
             break
