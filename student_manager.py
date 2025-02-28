@@ -1,7 +1,8 @@
 import csv
 import os
-import json  # For JSON operations
-import logging  # For logging mechanism
+import json
+import logging
+from datetime import datetime, timedelta
 from student import (
     Student,
     FACULTIES,
@@ -17,16 +18,34 @@ from student import (
     validate_program,
 )
 
+ALLOWED_EMAIL_DOMAIN = "@student.hcmus.edu.vn"
+ALLOWED_STATUS_TRANSITIONS = {
+    "Đang học": {"Đang học", "Bảo lưu", "Tốt nghiệp", "Đình chỉ"},
+    "Đã tốt nghiệp": {"Đã tốt nghiệp"},
+}
+
 
 class StudentManager:
     def __init__(self):
         self.students = []
-        self.load_from_csv()  # Auto-load CSV data if available
-        logging.info("StudentManager initialized and data loaded from CSV (if exists).")
+        self.load_from_csv()
+        self.deletion_restriction_enabled = True
+        self.deletion_window_minutes = 30
+        logging.info(
+            "StudentManager initialized. Deletion restriction: %s, window: %d minutes",
+            self.deletion_restriction_enabled,
+            self.deletion_window_minutes,
+        )
 
     def add_student(self):
         print("Add a new student:")
         mssv = input("MSSV: ")
+        # Business Rule 01: Kiểm tra MSSV duy nhất
+        for s in self.students:
+            if s.mssv == mssv:
+                print("Error: MSSV đã tồn tại. Vui lòng nhập MSSV khác.")
+                return
+
         name = input("Name: ")
         dob = input("DOB (YYYY-MM-DD): ")
         while not validate_dob(dob):
@@ -45,7 +64,6 @@ class StudentManager:
             print("Invalid year. Please enter a valid year (1900-current year).")
             year = input("Year: ")
 
-        # Select program from list or add new one
         print("Available Programs: ", PROGRAMS)
         program = input(
             "Select a program from the list or type 'new' to add a new program: "
@@ -68,12 +86,14 @@ class StudentManager:
 
         address = input("Address: ")
         email = input("Email: ")
-        while not validate_email(email):
-            print("Invalid email format. Please enter a valid email.")
+        while not (validate_email(email) and email.endswith(ALLOWED_EMAIL_DOMAIN)):
+            print(f"Invalid email. Email phải có đuôi {ALLOWED_EMAIL_DOMAIN}.")
             email = input("Email: ")
         phone = input("Phone: ")
         while not validate_phone(phone):
-            print("Invalid phone number. Please enter a 10-digit number.")
+            print(
+                "Invalid phone number. Please enter a valid phone number (e.g., +84XXXXXXXXX or 0[3|5|7|8|9]XXXXXXXX)."
+            )
             phone = input("Phone: ")
         status = input("Status: ")
         while not validate_status(status):
@@ -96,16 +116,33 @@ class StudentManager:
         self.students.append(student)
         print("Student added successfully!")
         logging.info("Added new student: MSSV=%s, Name=%s", mssv, name)
-        self.save_to_csv()  # Auto-save after adding a student
+        self.save_to_csv()
 
     def delete_student(self):
         mssv = input("Enter MSSV to delete: ")
         for student in self.students:
             if student.mssv == mssv:
+                # Check deletion restriction if enabled
+                if self.deletion_restriction_enabled:
+                    now = datetime.now()
+                    allowed_time = student.creation_time + timedelta(
+                        minutes=self.deletion_window_minutes
+                    )
+                    if now > allowed_time:
+                        print(
+                            "Cannot delete student. Deletion allowed only within",
+                            self.deletion_window_minutes,
+                            "minutes of creation.",
+                        )
+                        logging.warning(
+                            "Deletion restriction: Attempt to delete student MSSV=%s after allowed window",
+                            mssv,
+                        )
+                        return
                 self.students.remove(student)
                 print("Student deleted successfully!")
                 logging.info("Deleted student with MSSV=%s", mssv)
-                self.save_to_csv()  # Auto-save after deleting a student
+                self.save_to_csv()  # Auto-save after deletion
                 return
         print("Student not found.")
         logging.warning("Attempted to delete non-existent student with MSSV=%s", mssv)
@@ -115,6 +152,7 @@ class StudentManager:
         for student in self.students:
             if student.mssv == mssv:
                 print("Update student information:")
+                # (Giả sử MSSV không được cập nhật)
                 student.name = input(f"Name ({student.name}): ") or student.name
                 dob = input(f"DOB ({student.dob}): ") or student.dob
                 while not validate_dob(dob):
@@ -139,7 +177,6 @@ class StudentManager:
                     year = input(f"Year ({student.year}): ") or student.year
                 student.year = year
 
-                # Update program with selection from list or adding new
                 print("Available Programs: ", PROGRAMS)
                 program_input = (
                     input(f"Program ({student.program}): ") or student.program
@@ -165,26 +202,43 @@ class StudentManager:
                     input(f"Address ({student.address}): ") or student.address
                 )
                 email = input(f"Email ({student.email}): ") or student.email
-                while not validate_email(email):
-                    print("Invalid email format. Please enter a valid email.")
+                while not (
+                    validate_email(email) and email.endswith(ALLOWED_EMAIL_DOMAIN)
+                ):
+                    print(f"Invalid email. Email phải có đuôi {ALLOWED_EMAIL_DOMAIN}.")
                     email = input(f"Email ({student.email}): ") or student.email
                 student.email = email
                 phone = input(f"Phone ({student.phone}): ") or student.phone
                 while not validate_phone(phone):
-                    print("Invalid phone number. Please enter a 10-digit number.")
+                    print("Invalid phone number. Please enter a valid phone number.")
                     phone = input(f"Phone ({student.phone}): ") or student.phone
                 student.phone = phone
-                status = input(f"Status ({student.status}): ") or student.status
-                while not validate_status(status):
-                    print("Invalid status. Please choose from: ", STATUSES)
-                    status = input(f"Status ({student.status}): ") or student.status
-                student.status = status
+
+                # Business Rule 04: Kiểm tra chuyển đổi tình trạng
+                current_status = student.status
+                new_status = input(f"Status ({student.status}): ") or student.status
+                if new_status not in ALLOWED_STATUS_TRANSITIONS.get(
+                    current_status, {current_status}
+                ):
+                    print(
+                        f"Transition from '{current_status}' to '{new_status}' is not allowed."
+                    )
+                    logging.warning(
+                        "Invalid status transition: %s -> %s",
+                        current_status,
+                        new_status,
+                    )
+                    return
+                student.status = new_status
+
                 print("Student updated successfully!")
                 logging.info("Updated student: MSSV=%s", mssv)
-                self.save_to_csv()  # Auto-save after updating a student
+                self.save_to_csv()
                 return
         print("Student not found.")
         logging.warning("Attempted to update non-existent student with MSSV=%s", mssv)
+
+    # Updated search functions remain similar (omitted here for brevity)
 
     def search_student(self):
         print("\nSearch Student")
@@ -198,13 +252,14 @@ class StudentManager:
             self.search_by_faculty_and_name()
         else:
             search_term = input("Enter MSSV or Name to search: ")
-            results = []
-            for student in self.students:
+            results = [
+                student
+                for student in self.students
                 if (
                     search_term.lower() in student.mssv.lower()
                     or search_term.lower() in student.name.lower()
-                ):
-                    results.append(student)
+                )
+            ]
             if results:
                 print("Search results:")
                 for student in results:
@@ -373,14 +428,203 @@ class StudentManager:
             print("JSON file does not exist.")
             logging.warning("JSON file not found for import: %s", filename)
 
-    # The management functions for Faculties, Statuses, and Programs remain unchanged.
+    # New: Delete Faculty/Status/Program if no student uses them
+    def delete_faculty(self):
+        faculty = input("Enter the Faculty to delete: ")
+        if faculty not in FACULTIES:
+            print("Faculty does not exist.")
+            return
+        # Check if any student uses this faculty
+        for student in self.students:
+            if student.faculty == faculty:
+                print("Cannot delete Faculty. It is assigned to one or more students.")
+                return
+        FACULTIES.remove(faculty)
+        print("Faculty deleted successfully.")
+        logging.info("Deleted Faculty: %s", faculty)
+
+    def delete_status(self):
+        status = input("Enter the Student Status to delete: ")
+        if status not in STATUSES:
+            print("Status does not exist.")
+            return
+        for student in self.students:
+            if student.status == status:
+                print("Cannot delete Status. It is assigned to one or more students.")
+                return
+        STATUSES.remove(status)
+        print("Status deleted successfully.")
+        logging.info("Deleted Student Status: %s", status)
+
+    def delete_program(self):
+        program = input("Enter the Program to delete: ")
+        if program not in PROGRAMS:
+            print("Program does not exist.")
+            return
+        for student in self.students:
+            if student.program == program:
+                print("Cannot delete Program. It is assigned to one or more students.")
+                return
+        PROGRAMS.remove(program)
+        print("Program deleted successfully.")
+        logging.info("Deleted Program: %s", program)
+
+    # New: Export confirmation letter in HTML and Markdown formats
+    def export_confirmation_letter(self):
+        mssv = input("Enter MSSV of the student to export confirmation letter: ")
+        student = None
+        for s in self.students:
+            if s.mssv == mssv:
+                student = s
+                break
+        if not student:
+            print("Student not found.")
+            return
+
+        print("Choose format: 1. HTML  2. Markdown")
+        fmt_choice = input("Enter your choice: ")
+        if fmt_choice == "1":
+            self._export_letter_html(student)
+        elif fmt_choice == "2":
+            self._export_letter_md(student)
+        else:
+            print("Invalid format selection.")
+
+    def _export_letter_html(self, student):
+        # Template for HTML confirmation letter
+        html_template = f"""
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Giấy Xác Nhận Tình Trạng Sinh Viên</title>
+  <style>
+    body {{ font-family: Arial, sans-serif; }}
+    .header {{ text-align: center; }}
+    .content {{ margin: 20px; }}
+    hr {{ border: 1px solid #000; }}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>TRƯỜNG ĐẠI HỌC [Tên Trường]</h1>
+    <h2>PHÒNG ĐÀO TẠO</h2>
+    <p>📍 Địa chỉ: [Địa chỉ trường] | 📞 Điện thoại: [Số điện thoại] | 📧 Email: [Email liên hệ]</p>
+    <hr>
+  </div>
+  <div class="content">
+    <h2>GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN</h2>
+    <p>Trường Đại học [Tên Trường] xác nhận:</p>
+    <h3>1. Thông tin sinh viên:</h3>
+    <ul>
+      <li><strong>Họ và tên:</strong> {student.name}</li>
+      <li><strong>Mã số sinh viên:</strong> {student.mssv}</li>
+      <li><strong>Ngày sinh:</strong> {student.dob}</li>
+      <li><strong>Giới tính:</strong> {student.gender}</li>
+      <li><strong>Khoa:</strong> {student.faculty}</li>
+      <li><strong>Chương trình đào tạo:</strong> {student.program}</li>
+      <li><strong>Khóa:</strong> [KXX - Năm nhập học]</li>
+    </ul>
+    <h3>2. Tình trạng sinh viên hiện tại:</h3>
+    <ul>
+      <li>Đang theo học</li>
+      <li>Đã hoàn thành chương trình, chờ xét tốt nghiệp</li>
+      <li>Đã tốt nghiệp</li>
+      <li>Bảo lưu</li>
+      <li>Đình chỉ học tập</li>
+      <li>Tình trạng khác</li>
+    </ul>
+    <h3>3. Mục đích xác nhận:</h3>
+    <ul>
+      <li>Xác nhận đang học để vay vốn ngân hàng</li>
+      <li>Xác nhận làm thủ tục tạm hoãn nghĩa vụ quân sự</li>
+      <li>Xác nhận làm hồ sơ xin việc / thực tập</li>
+      <li>Xác nhận lý do khác: [Ghi rõ]</li>
+    </ul>
+    <h3>4. Thời gian cấp giấy:</h3>
+    <p>Giấy xác nhận có hiệu lực đến ngày: [DD/MM/YYYY]</p>
+    <p>📍 <strong>Xác nhận của Trường Đại học [Tên Trường]</strong></p>
+    <p>📅 Ngày cấp: [DD/MM/YYYY]</p>
+    <p>🖋 <strong>Trưởng Phòng Đào Tạo</strong> (Ký, ghi rõ họ tên, đóng dấu)</p>
+  </div>
+  <hr>
+</body>
+</html>
+"""
+        filename = f"confirmation_{student.mssv}.html"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(html_template)
+        print(f"Confirmation letter exported to {filename}.")
+        logging.info(
+            "Exported confirmation letter in HTML for student MSSV=%s", student.mssv
+        )
+
+    def _export_letter_md(self, student):
+        # Template for Markdown confirmation letter
+        md_template = f"""
+# TRƯỜNG ĐẠI HỌC [Tên Trường]  
+**PHÒNG ĐÀO TẠO**  
+📍 Địa chỉ: [Địa chỉ trường]  
+📞 Điện thoại: [Số điện thoại] | 📧 Email: [Email liên hệ]  
+
+---  
+
+## GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN
+
+Trường Đại học [Tên Trường] xác nhận:
+
+### 1. Thông tin sinh viên:
+- **Họ và tên:** {student.name}
+- **Mã số sinh viên:** {student.mssv}
+- **Ngày sinh:** {student.dob}
+- **Giới tính:** {student.gender}
+- **Khoa:** {student.faculty}
+- **Chương trình đào tạo:** {student.program}
+- **Khóa:** [KXX - Năm nhập học]
+
+### 2. Tình trạng sinh viên hiện tại:
+- Đang theo học
+- Đã hoàn thành chương trình, chờ xét tốt nghiệp
+- Đã tốt nghiệp
+- Bảo lưu
+- Đình chỉ học tập
+- Tình trạng khác
+
+### 3. Mục đích xác nhận:
+- Xác nhận đang học để vay vốn ngân hàng
+- Xác nhận làm thủ tục tạm hoãn nghĩa vụ quân sự
+- Xác nhận làm hồ sơ xin việc / thực tập
+- Xác nhận lý do khác: [Ghi rõ]
+
+### 4. Thời gian cấp giấy:
+- Giấy xác nhận có hiệu lực đến ngày: [DD/MM/YYYY]
+
+📍 **Xác nhận của Trường Đại học [Tên Trường]**  
+
+📅 Ngày cấp: [DD/MM/YYYY]  
+
+🖋 **Trưởng Phòng Đào Tạo**  
+(Ký, ghi rõ họ tên, đóng dấu)
+
+---
+"""
+        filename = f"confirmation_{student.mssv}.md"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(md_template)
+        print(f"Confirmation letter exported to {filename}.")
+        logging.info(
+            "Exported confirmation letter in Markdown for student MSSV=%s", student.mssv
+        )
+
+    # Existing management functions for Faculties, Statuses, and Programs are updated below:
     def manage_faculties(self):
         while True:
             print("\nManage Faculties")
             print("1. Add new Faculty")
             print("2. Rename existing Faculty")
-            print("3. List Faculties")
-            print("4. Back to main menu")
+            print("3. Delete Faculty")
+            print("4. List Faculties")
+            print("5. Back to main menu")
             choice = input("Enter your choice: ")
             if choice == "1":
                 new_faculty = input("Enter new Faculty name: ")
@@ -405,8 +649,10 @@ class StudentManager:
                     print("Faculty renamed successfully.")
                     logging.info("Renamed Faculty from %s to %s", old_name, new_name)
             elif choice == "3":
-                print("List of Faculties: ", FACULTIES)
+                self.delete_faculty()
             elif choice == "4":
+                print("List of Faculties: ", FACULTIES)
+            elif choice == "5":
                 break
             else:
                 print("Invalid choice. Try again.")
@@ -416,8 +662,9 @@ class StudentManager:
             print("\nManage Student Statuses")
             print("1. Add new Status")
             print("2. Rename existing Status")
-            print("3. List Statuses")
-            print("4. Back to main menu")
+            print("3. Delete Status")
+            print("4. List Statuses")
+            print("5. Back to main menu")
             choice = input("Enter your choice: ")
             if choice == "1":
                 new_status = input("Enter new Status: ")
@@ -442,8 +689,10 @@ class StudentManager:
                     print("Status renamed successfully.")
                     logging.info("Renamed Status from %s to %s", old_status, new_status)
             elif choice == "3":
-                print("List of Statuses: ", STATUSES)
+                self.delete_status()
             elif choice == "4":
+                print("List of Statuses: ", STATUSES)
+            elif choice == "5":
                 break
             else:
                 print("Invalid choice. Try again.")
@@ -453,8 +702,9 @@ class StudentManager:
             print("\nManage Programs")
             print("1. Add new Program")
             print("2. Rename existing Program")
-            print("3. List Programs")
-            print("4. Back to main menu")
+            print("3. Delete Program")
+            print("4. List Programs")
+            print("5. Back to main menu")
             choice = input("Enter your choice: ")
             if choice == "1":
                 new_program = input("Enter new Program name: ")
@@ -481,8 +731,10 @@ class StudentManager:
                         "Renamed Program from %s to %s", old_program, new_program
                     )
             elif choice == "3":
-                print("List of Programs: ", PROGRAMS)
+                self.delete_program()
             elif choice == "4":
+                print("List of Programs: ", PROGRAMS)
+            elif choice == "5":
                 break
             else:
                 print("Invalid choice. Try again.")
