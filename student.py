@@ -1,7 +1,6 @@
 import re
 from datetime import datetime
 
-# Constants
 FACULTIES = [
     "Khoa Luật",
     "Khoa Tiếng Anh thương mại",
@@ -13,7 +12,6 @@ GENDERS = ["Nam", "Nữ", "Khác"]
 PROGRAMS = ["Chương trình chuẩn", "Chương trình đặc biệt"]
 
 
-# Student class
 class Student:
     def __init__(
         self,
@@ -28,6 +26,7 @@ class Student:
         email,
         phone,
         status,
+        creation_time=None,
     ):
         self.mssv = mssv
         self.name = name
@@ -40,6 +39,7 @@ class Student:
         self.email = email
         self.phone = phone
         self.status = status
+        self.creation_time = creation_time if creation_time else datetime.now()
 
     def __str__(self):
         return (
@@ -49,14 +49,13 @@ class Student:
         )
 
 
-# Validation functions
 def validate_email(email):
     pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     return re.match(pattern, email) is not None
 
 
 def validate_phone(phone):
-    pattern = r"^\d{10}$"
+    pattern = r"^(?:\+84|0)(?:3|5|7|8|9)\d{8}$"
     return re.match(pattern, phone) is not None
 
 
