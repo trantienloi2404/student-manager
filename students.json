@@ -1,0 +1,28 @@
+[
+    {
+        "mssv": "1",
+        "name": "ABC",
+        "dob": "2000-02-02",
+        "gender": "Nam",
+        "faculty": "Khoa Luật",
+        "year": "2004",
+        "program": "CLC",
+        "address": "228",
+        "email": "tloi@gmail.com",
+        "phone": "0385405898",
+        "status": "Đang học"
+    },
+    {
+        "mssv": "2",
+        "name": "DEF",
+        "dob": "2004-12-20",
+        "gender": "Nam",
+        "faculty": "Khoa Luật",
+        "year": "2022",
+        "program": "Chương trình chuẩn",
+        "address": "227",
+        "email": "ttloi2@gmail.com",
+        "phone": "9385498321",
+        "status": "Đang học"
+    }
+]

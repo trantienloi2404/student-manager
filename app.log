@@ -1,0 +1,32 @@
+2025-02-21 20:08:38,313 - INFO - Application started.
+2025-02-21 20:08:38,314 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-21 20:08:38,314 - INFO - StudentManager initialized and data loaded from CSV (if exists).
+2025-02-21 20:08:44,878 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-21 20:39:26,504 - INFO - Application started.
+2025-02-21 20:39:26,505 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-21 20:39:26,506 - INFO - StudentManager initialized and data loaded from CSV (if exists).
+2025-02-21 20:39:31,104 - INFO - Displayed application version and build date.
+2025-02-21 20:41:14,522 - INFO - Application exited by user.
+2025-02-21 20:41:14,523 - INFO - Application terminated.
+2025-02-21 20:55:12,679 - INFO - Application started.
+2025-02-21 20:55:12,680 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-21 20:55:12,680 - INFO - StudentManager initialized and data loaded from CSV (if exists).
+2025-02-21 21:02:38,661 - INFO - Application started.
+2025-02-21 21:02:38,661 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-21 21:02:38,662 - INFO - StudentManager initialized and data loaded from CSV (if exists).
+2025-02-21 21:03:16,300 - INFO - Searched by MSSV/Name with term: 1
+2025-02-21 21:03:33,641 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-21 21:03:40,439 - INFO - Listed all students. Count: 2
+2025-02-21 21:04:03,028 - INFO - Exported 2 students to JSON file: students.json
+2025-02-21 21:04:53,077 - INFO - Displayed application version and build date.
+2025-02-21 21:06:31,921 - INFO - Application exited by user.
+2025-02-21 21:06:31,922 - INFO - Application terminated.
+2025-02-21 21:06:34,275 - INFO - Application started.
+2025-02-21 21:06:34,276 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-21 21:06:34,276 - INFO - StudentManager initialized and data loaded from CSV (if exists).
+2025-02-21 21:06:54,981 - INFO - Added new Faculty: Khoa CNTT
+2025-02-21 21:07:20,761 - INFO - Renamed Faculty from Khoa Lu\u1eadt to Khoa Toán
+2025-02-27 22:03:42,171 - INFO - Application started.
+2025-02-27 22:03:42,178 - INFO - Imported 2 students from CSV file: students.csv
+2025-02-27 22:03:42,179 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-02-27 22:04:11,378 - INFO - Exported confirmation letter in Markdown for student MSSV=1
