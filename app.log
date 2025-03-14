@@ -30,3 +30,57 @@
 2025-02-27 22:03:42,178 - INFO - Imported 2 students from CSV file: students.csv
 2025-02-27 22:03:42,179 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
 2025-02-27 22:04:11,378 - INFO - Exported confirmation letter in Markdown for student MSSV=1
+2025-03-14 20:01:12,608 - INFO - Application started.
+2025-03-14 20:01:12,609 - INFO - Imported 2 students from CSV file: students.csv
+2025-03-14 20:01:12,609 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:01:37,856 - INFO - Listed all students. Count: 2
+2025-03-14 20:03:11,644 - INFO - Application started.
+2025-03-14 20:03:11,645 - INFO - Imported 2 students from CSV file: students.csv
+2025-03-14 20:03:11,645 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:06:44,504 - INFO - Added new student: MSSV=3, Name=open
+2025-03-14 20:06:44,505 - INFO - Exported 3 students to CSV file: students.csv
+2025-03-14 20:07:46,136 - INFO - Added new Status: \u0110ang th\u1ef1c t\u1eadp
+2025-03-14 20:09:04,088 - INFO - Deleted student with MSSV=3
+2025-03-14 20:09:04,089 - INFO - Exported 2 students to CSV file: students.csv
+2025-03-14 20:09:13,232 - INFO - Toggled deletion restriction to False
+2025-03-14 20:09:23,296 - INFO - Toggled deletion restriction to True
+2025-03-14 20:09:26,135 - INFO - Deleted student with MSSV=1
+2025-03-14 20:09:26,137 - INFO - Exported 1 students to CSV file: students.csv
+2025-03-14 20:09:29,344 - INFO - Toggled deletion restriction to False
+2025-03-14 20:09:32,360 - WARNING - Attempted to delete non-existent student with MSSV=12
+2025-03-14 20:11:17,318 - INFO - Application started.
+2025-03-14 20:11:17,325 - INFO - Imported 1 students from CSV file: students.csv
+2025-03-14 20:11:17,326 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:11:20,191 - INFO - Listed all students. Count: 1
+2025-03-14 20:12:11,256 - INFO - Added new student: MSSV=1, Name=loi
+2025-03-14 20:12:11,257 - INFO - Exported 2 students to CSV file: students.csv
+2025-03-14 20:12:17,079 - INFO - Toggled deletion restriction to False
+2025-03-14 20:12:17,704 - INFO - Toggled deletion restriction to True
+2025-03-14 20:12:22,640 - INFO - Deleted student with MSSV=1
+2025-03-14 20:12:22,641 - INFO - Exported 1 students to CSV file: students.csv
+2025-03-14 20:14:17,726 - INFO - Application started.
+2025-03-14 20:14:17,727 - INFO - Imported 1 students from CSV file: students.csv
+2025-03-14 20:14:17,728 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:14:19,665 - INFO - Deleted student with MSSV=2
+2025-03-14 20:14:19,666 - INFO - Exported 0 students to CSV file: students.csv
+2025-03-14 20:14:42,205 - INFO - Application started.
+2025-03-14 20:14:42,213 - INFO - Imported 0 students from CSV file: students.csv
+2025-03-14 20:14:42,213 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:14:44,904 - WARNING - Attempted to delete non-existent student with MSSV=2
+2025-03-14 20:15:43,520 - INFO - Added new student: MSSV=1, Name=Loi
+2025-03-14 20:15:43,522 - INFO - Exported 1 students to CSV file: students.csv
+2025-03-14 20:16:30,196 - INFO - Application started.
+2025-03-14 20:16:30,204 - INFO - Imported 4 students from CSV file: students.csv
+2025-03-14 20:16:30,204 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:16:33,312 - INFO - Listed all students. Count: 4
+2025-03-14 20:17:22,914 - INFO - Application started.
+2025-03-14 20:17:22,915 - INFO - Imported 4 students from CSV file: students.csv
+2025-03-14 20:17:22,915 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:17:29,200 - INFO - Deleted student with MSSV=1
+2025-03-14 20:17:29,201 - INFO - Exported 3 students to CSV file: students.csv
+2025-03-14 20:20:30,493 - INFO - Application started.
+2025-03-14 20:20:30,494 - INFO - Imported 3 students from CSV file: students.csv
+2025-03-14 20:20:30,494 - INFO - StudentManager initialized. Deletion restriction: True, window: 30 minutes
+2025-03-14 20:21:01,976 - INFO - Deleted Faculty: Khoa Ti\u1ebfng Nh\u1eadt
+2025-03-14 20:21:29,121 - INFO - Exported confirmation letter in HTML for student MSSV=2
+2025-03-14 20:22:26,625 - INFO - Exported confirmation letter in Markdown for student MSSV=2

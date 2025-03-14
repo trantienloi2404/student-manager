@@ -26,7 +26,7 @@ class Student:
         email,
         phone,
         status,
-        creation_time=None,
+        creation_time=datetime.now(),
     ):
         self.mssv = mssv
         self.name = name

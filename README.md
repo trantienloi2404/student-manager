@@ -1,135 +1,88 @@
-# Hệ Thống Quản Lý Sinh Viên
+# HỆ THỐNG QUẢN LÝ SINH VIÊN – VERSION 3.0
 
-## Phiên Bản 2.0
+## Các Tính Năng Chính
+ 
+## Ex03
 
-Version 2.0 đã bổ sung các tính năng mới sau:
+1. **MSSV phải là duy nhất**  
+   - Khi thêm hoặc cập nhật sinh viên, hệ thống phải kiểm tra và từ chối nếu có sinh viên khác có cùng MSSV.
 
-- **Import/Export Dữ Liệu:** Hỗ trợ nhập (import) và xuất (export) dữ liệu sinh viên theo 2 định dạng CSV và JSON.
-- **Logging Mechanism:** Ghi lại các hoạt động (thêm, cập nhật, xóa, import/export,…) vào file `app.log` nhằm phục vụ troubleshooting và audit.
-- **Hiển Thị Version & Build Date:** Cho phép xem phiên bản ứng dụng và ngày build (tính động dựa trên thời gian sửa đổi của file `main.py`).
-- **Quản Lý Danh Mục Nâng Cao:** Quản lý, thêm mới và đổi tên các danh mục: Khoa, Tình trạng sinh viên, Chương trình đào tạo.
-- **Tìm Kiếm Nâng Cao:** Hỗ trợ tìm kiếm sinh viên theo khoa, và kết hợp tìm kiếm theo khoa & tên sinh viên.
+2. **Email phải thuộc một tên miền nhất định và có thể cấu hình động**  
+   - Ví dụ: Hệ thống chỉ chấp nhận email có đuôi `@student.hcmus.edu.vn`.
 
-## Cấu Trúc Mã Nguồn
+3. **Số điện thoại phải có định dạng hợp lệ theo quốc gia (configurable)**  
+   - Ví dụ: Với Việt Nam, số điện thoại phải theo định dạng `+84XXXXXXXXX` hoặc `0[3|5|7|8|9]XXXXXXXX`.
 
-Chương trình được chia thành các file sau:
+4. **Tình trạng sinh viên chỉ có thể thay đổi theo quy tắc định sẵn (configurable)**  
+   - Ví dụ:
+     - `"Đang học"` có thể chuyển sang `"Bảo lưu"`, `"Tốt nghiệp"`, hoặc `"Đình chỉ"`.
+     - `"Đã tốt nghiệp"` không thể chuyển lại thành `"Đang học"`.
 
-1. **`student.py`**:
+---
 
-   - Chứa class `Student` để lưu trữ thông tin sinh viên.
-   - Các hàm validation để kiểm tra tính hợp lệ của dữ liệu nhập vào (email, số điện thoại, ngày sinh, năm học, giới tính, khoa, tình trạng sinh viên).
+## Ex04
 
-2. **`student_manager.py`**:
+5. **Quy tắc xóa sinh viên**  
+   - Chỉ cho phép xóa sinh viên nếu thời gian từ lúc tạo (creation date/time) chưa vượt quá khoảng thời gian cấu hình (ví dụ: 30 phút).
 
-   - Chứa class `StudentManager` để quản lý danh sách sinh viên.
-   - Cung cấp các phương thức để thêm, xóa, cập nhật, tìm kiếm, quản lý danh mục (Khoa, Tình trạng, Chương trình), import/export CSV & JSON và logging.
+6. **Bật/Tắt quy tắc business**  
+   - Người dùng có thể bật hoặc tắt việc áp dụng các quy tắc trên.
 
-3. **`main.py`**:
-   - Chứa chương trình chính để chạy ứng dụng.
-   - Cung cấp giao diện dòng lệnh (CLI) với menu các chức năng, bao gồm hiển thị version & build date.
-   - Cấu hình logging để ghi lại các hoạt động của ứng dụng.
+7. **Hiển thị logo/tên trường**  
+   - Tất cả các màn hình giao diện của ứng dụng phải hiển thị logo hoặc tên trường.
 
-## Yêu Cầu Hệ Thống
+8. **Xóa danh mục**  
+   - Cho phép xóa các danh mục như Khoa, Tình trạng sinh viên và Chương trình đào tạo nếu không có dữ liệu sinh viên liên kết.
 
-- Python 3.x đã được cài đặt trên máy tính.
+9. **Xuất giấy xác nhận tình trạng sinh viên**  
+    - Hệ thống phải hỗ trợ xuất giấy xác nhận ra ít nhất 2 định dạng (ví dụ: HTML và Markdown) với mẫu sau:
 
-## Hướng Dẫn Cài Đặt và Chạy Chương Trình
+    ---
+    
+    **TRƯỜNG ĐẠI HỌC Khoa Học Tự Nhiên**  
+    **PHÒNG ĐÀO TẠO**  
+    📍 Địa chỉ: 227 Nguyễn Văn Cừ Quận 5 Thành Phố Hồ Chí Minh  
+    📞 Điện thoại: [Số điện thoại] | 📧 Email: [Email liên hệ]  
+    
+    ---  
+    
+    ### **GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN**  
+    
+    Trường Đại học Khoa Học Tự Nhiên xác nhận:  
+    
+    **1. Thông tin sinh viên:**  
+    - **Họ và tên:** [Họ và tên sinh viên]  
+    - **Mã số sinh viên:** [MSSV]  
+    - **Ngày sinh:** [DD/MM/YYYY]  
+    - **Giới tính:** [Nam/Nữ/Khác]  
+    - **Khoa:** [Tên khoa]  
+    - **Chương trình đào tạo:** [Cử nhân/Kỹ sư/Thạc sĩ...]  
+    - **Khóa:** [KXX - Năm nhập học]  
+    
+    **2. Tình trạng sinh viên hiện tại:**  
+    - Đang theo học  
+    - Đã hoàn thành chương trình, chờ xét tốt nghiệp  
+    - Đã tốt nghiệp  
+    - Bảo lưu  
+    - Đình chỉ học tập  
+    - Tình trạng khác  
+    
+    **3. Mục đích xác nhận:**  
+    - Xác nhận đang học để vay vốn ngân hàng  
+    - Xác nhận làm thủ tục tạm hoãn nghĩa vụ quân sự  
+    - Xác nhận làm hồ sơ xin việc / thực tập  
+    - Xác nhận lý do khác: [Ghi rõ]  
+    
+    **4. Thời gian cấp giấy:**  
+    - Giấy xác nhận có hiệu lực đến ngày: [DD/MM/YYYY]  
+    
+    📍 **Xác nhận của Trường Đại Học Khoa Học Tự Nhiên**  
+    
+    📅 Ngày cấp: [DD/MM/YYYY]  
+    
+    🖋 **Trưởng Phòng Đào Tạo**  
+    (Ký, ghi rõ họ tên, đóng dấu)  
+    
+    ---
 
-### Bước 1: Tải Mã Nguồn
-
-- Sau khi tải file mã nguồn, hãy giải nén file để có thư mục chứa các file mã nguồn.
-
-### Bước 2: Chạy Chương Trình
-
-- Mở terminal hoặc command prompt và di chuyển đến thư mục chứa mã nguồn.
-- Chạy chương trình bằng lệnh:
-  ```bash
-  python main.py
-  ```
-
-### Bước 3: Sử Dụng Chương Trình
-
-Khi chương trình chạy, bạn sẽ thấy một menu với các tùy chọn:
-
-1. **Add a new student:** Nhập thông tin sinh viên.
-2. **Delete a student:** Xóa sinh viên dựa trên MSSV.
-3. **Update a student:** Cập nhật thông tin dựa trên MSSV.
-4. **Search for a student:** Tìm kiếm sinh viên theo MSSV/Name, theo Khoa hoặc theo kết hợp Khoa & Tên.
-5. **List all students:** Hiển thị tất cả sinh viên.
-6. **Export data to CSV:** Xuất dữ liệu sinh viên ra file CSV.
-7. **Import data from CSV:** Nhập dữ liệu từ file CSV.
-8. **Export data to JSON:** Xuất dữ liệu sinh viên ra file JSON.
-9. **Import data from JSON:** Nhập dữ liệu từ file JSON.
-10. **Manage Faculties:** Quản lý danh mục Khoa.
-11. **Manage Student Statuses:** Quản lý danh mục Tình trạng sinh viên.
-12. **Manage Programs:** Quản lý danh mục Chương trình đào tạo.
-13. **Show Version and Build Date:** Hiển thị thông tin version và ngày build của ứng dụng.
-14. **Exit:** Kết thúc chương trình.
-
-## Hướng Dẫn Sử Dụng Các Tính Năng Mới
-
-### 1. Import/Export Dữ Liệu
-
-- **Export CSV/JSON:** Chọn các mục 6 hoặc 8 trong menu để xuất dữ liệu ra file `students.csv` hoặc `students.json`.
-- **Import CSV/JSON:** Chọn các mục 7 hoặc 9 để nhập dữ liệu từ file tương ứng.  
-  _Lưu ý: Khi import, danh sách sinh viên hiện tại sẽ được làm mới (clear) để tránh trùng lặp._
-
-### 2. Logging Mechanism
-
-- Mọi thao tác (thêm, xóa, cập nhật, tìm kiếm, import/export,…) được ghi vào file `app.log`.  
-  Bạn có thể kiểm tra file này để audit và troubleshoot các vấn đề trong production.
-
-### 3. Hiển Thị Version & Build Date
-
-- Chọn mục 13 trong menu để hiển thị phiên bản ứng dụng và ngày build.  
-  Ngày build được tính dựa trên thời gian sửa đổi của file `main.py`, đảm bảo luôn đúng theo phiên bản cập nhật mới nhất.
-
-## Ảnh Chụp Màn Hình Minh Chứng
-
-### Giao Diện Chính
-
-![image](https://github.com/user-attachments/assets/17a1c1f8-d54f-47ac-b38e-cfbdde0c70a8)
-
-### Lưu trữ dữ liệu
-
-![image](https://github.com/user-attachments/assets/4e110dea-1611-42a1-8bc1-00e95f004a3e)
-
-### Cho phép đổi tên & thêm mới
-
-![image](https://github.com/user-attachments/assets/1ebe409b-4f87-48ba-a2b1-144ecfb91c68)
-![image](https://github.com/user-attachments/assets/af282238-92c1-4ad4-8a07-58fbcaf52379)
-
-### Tìm Kiếm Sinh Viên (Tìm theo Khoa & Kết hợp Khoa + Tên)
-
-![image](https://github.com/user-attachments/assets/9717ee4f-f32f-4b6c-98a9-b6d77952ad3d)
-
-### Import/Export Dữ Liệu CSV & JSON
-
-![image](https://github.com/user-attachments/assets/054b2ce3-2e24-4bb2-b05d-54b0bd5f8981)
-![image](https://github.com/user-attachments/assets/542d5666-d1b6-47c4-8cab-b3c76c327385)
-![image](https://github.com/user-attachments/assets/4e110dea-1611-42a1-8bc1-00e95f004a3e)
-
-### Logging Mechanism
-
-![image](https://github.com/user-attachments/assets/b3c9dfe5-58d5-4a3b-becc-d580c19248df)
-
-### Hiển Thị Version & Build Date
-
-![image](https://github.com/user-attachments/assets/cea01ff2-2efc-4b51-809a-8a77f4339ad9)
-
-## Kiểm Tra Tính Hợp Lệ Của Dữ Liệu
-
-Chương trình sẽ tự động kiểm tra tính hợp lệ của các trường dữ liệu như:
-
-- **Email:** Định dạng email hợp lệ (ví dụ: `example@domain.com`).
-- **Số điện thoại:** Phải là 10 chữ số.
-- **Ngày sinh:** Định dạng `YYYY-MM-DD`.
-- **Năm học:** Phải là một năm hợp lệ (từ 1900 đến năm hiện tại).
-- **Giới tính:** Chỉ chấp nhận các giá trị `Nam`, `Nữ`, hoặc `Khác`.
-- **Khoa:** Chỉ chấp nhận các khoa được định nghĩa sẵn.
-- **Tình trạng sinh viên:** Chỉ chấp nhận các tình trạng được định nghĩa sẵn.
-
-## Ứng Dụng Logging và Audit
-
-- Các hoạt động của người dùng sẽ được ghi vào file `app.log` với thông tin thời gian, mức độ log và mô tả thao tác.  
-  Điều này giúp theo dõi hoạt động của ứng dụng trong môi trường production và hỗ trợ troubleshooting khi có vấn đề xảy ra.
+## Hình ảnh minh chứng

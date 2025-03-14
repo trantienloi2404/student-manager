@@ -1,3 +1,4 @@
 mssv,name,dob,gender,faculty,year,program,address,email,phone,status
-1,ABC,2000-02-02,Nam,Khoa Luật,2004,CLC,228,tloi@gmail.com,0385405898,Đang học
-2,DEF,2004-12-20,Nam,Khoa Luật,2022,Chương trình chuẩn,227,ttloi2@gmail.com,9385498321,Đang học
+2,Tran,2004-12-03,Nam,Khoa Luật,2021,Chương trình chuẩn,227NVC,21272400@student.hcmus.edu.vn,0385401234,Đang học
+3,Tien,2004-12-03,Nam,Khoa Luật,2020,Chương trình chuẩn,227NVC,21272400@student.hcmus.edu.vn,0385401234,Đang học
+4,Hornet,2004-12-03,Nam,Khoa Luật,2023,Chương trình chuẩn,227NVC,21272400@student.hcmus.edu.vn,0385401234,Đang học

@@ -37,7 +37,7 @@ def main():
     manager = StudentManager()
     while True:
         print_header()
-        print("\nStudent Management System - Version 2.0")
+        print("\nStudent Management System - Version 3.0")
         print("1. Add a new student")
         print("2. Delete a student")
         print("3. Update a student")

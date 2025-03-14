@@ -128,6 +128,8 @@ class StudentManager:
                     allowed_time = student.creation_time + timedelta(
                         minutes=self.deletion_window_minutes
                     )
+                    print("Now: ",now)
+                    print("allow: ",allowed_time)
                     if now > allowed_time:
                         print(
                             "Cannot delete student. Deletion allowed only within",
@@ -507,14 +509,14 @@ class StudentManager:
 </head>
 <body>
   <div class="header">
-    <h1>TRƯỜNG ĐẠI HỌC [Tên Trường]</h1>
+    <h1>TRƯỜNG ĐẠI HỌC Khoa Học Tự Nhiên</h1>
     <h2>PHÒNG ĐÀO TẠO</h2>
-    <p>📍 Địa chỉ: [Địa chỉ trường] | 📞 Điện thoại: [Số điện thoại] | 📧 Email: [Email liên hệ]</p>
+    <p>📍 Địa chỉ: 227 Nguyễn Văn Cừ Quận 5 Thành Phố Hồ Chí Minh | 📞 Điện thoại: [Số điện thoại] | 📧 Email: [Email liên hệ]</p>
     <hr>
   </div>
   <div class="content">
     <h2>GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN</h2>
-    <p>Trường Đại học [Tên Trường] xác nhận:</p>
+    <p>Trường Đại học Khoa Học Tự Nhiên xác nhận:</p>
     <h3>1. Thông tin sinh viên:</h3>
     <ul>
       <li><strong>Họ và tên:</strong> {student.name}</li>
@@ -543,7 +545,7 @@ class StudentManager:
     </ul>
     <h3>4. Thời gian cấp giấy:</h3>
     <p>Giấy xác nhận có hiệu lực đến ngày: [DD/MM/YYYY]</p>
-    <p>📍 <strong>Xác nhận của Trường Đại học [Tên Trường]</strong></p>
+    <p>📍 <strong>Xác nhận của Trường Đại học Khoa Học Tự Nhiên</strong></p>
     <p>📅 Ngày cấp: [DD/MM/YYYY]</p>
     <p>🖋 <strong>Trưởng Phòng Đào Tạo</strong> (Ký, ghi rõ họ tên, đóng dấu)</p>
   </div>
@@ -562,16 +564,16 @@ class StudentManager:
     def _export_letter_md(self, student):
         # Template for Markdown confirmation letter
         md_template = f"""
-# TRƯỜNG ĐẠI HỌC [Tên Trường]  
+# TRƯỜNG ĐẠI HỌC Khoa Học Tự Nhiên  
 **PHÒNG ĐÀO TẠO**  
-📍 Địa chỉ: [Địa chỉ trường]  
+📍 Địa chỉ: 227 Nguyễn Văn Cừ Quận 5 Thành Phố Hồ Chí Minh  
 📞 Điện thoại: [Số điện thoại] | 📧 Email: [Email liên hệ]  
 
 ---  
 
 ## GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN
 
-Trường Đại học [Tên Trường] xác nhận:
+Trường Đại học Khoa Học Tự Nhiên xác nhận:
 
 ### 1. Thông tin sinh viên:
 - **Họ và tên:** {student.name}
@@ -599,7 +601,7 @@ Trường Đại học [Tên Trường] xác nhận:
 ### 4. Thời gian cấp giấy:
 - Giấy xác nhận có hiệu lực đến ngày: [DD/MM/YYYY]
 
-📍 **Xác nhận của Trường Đại học [Tên Trường]**  
+📍 **Xác nhận của Trường Đại học Khoa Học Tự Nhiên**  
 
 📅 Ngày cấp: [DD/MM/YYYY]  
 
